@@ -1,116 +1,35 @@
-
 package com.unpri.charactermanager.model;
 
 public class Character {
-
-    private int id;
     private String name;
     private CharacterType type;
     private int level;
-    private int hitPoints;
-    private int attackPower;
-    private int mana;
 
     public Character(String name, CharacterType type, int level) {
         this.name = name;
         this.type = type;
-        this.mana = 0;
-        setLevel(level);
-    }
-
-    public Character(int id, String name, CharacterType type, int level) {
-        this(name, type, level);
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+        this.level = level;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public CharacterType getType() {
         return type;
-    }
-
-    public void setType(CharacterType type) {
-        this.type = type;
     }
 
     public int getLevel() {
         return level;
     }
 
-    public void setLevel(int level) {
-        if (level < 1) {
-            throw new IllegalArgumentException("Level minimal 1");
-        }
-
-        this.level = level;
-        this.hitPoints = 100 + (level * 10);
-        this.attackPower = 10 + (level * 5);
-    }
-
+    // Perhitungan HP dinamis agar nilainya bervariasi tiap karakter (misal: Arjuna 150, Merlin 130, dll)
     public int getHitPoints() {
-        return hitPoints;
+        return 100 + (level * 10);
     }
 
-    public void setHitPoints(int hitPoints) {
-        this.hitPoints = hitPoints;
-    }
-
+    // Perhitungan Attack Power dinamis
     public int getAttackPower() {
-        return attackPower;
-    }
-
-    public void setAttackPower(int attackPower) {
-        this.attackPower = attackPower;
-    }
-
-    public int getMana() {
-        return mana;
-    }
-
-    public void setMana(int mana) {
-        if (mana < 0) {
-            throw new IllegalArgumentException("Mana tidak boleh negatif");
-        }
-        this.mana = mana;
-    }
-
-    public boolean isAlive() {
-        return hitPoints > 0;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof Character)) return false;
-
-        Character other = (Character) obj;
-        return name.equalsIgnoreCase(other.name);
-    }
-
-    @Override
-    public String toString() {
-        return "Character{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", type=" + type +
-                ", level=" + level +
-                ", hp=" + hitPoints +
-                ", atk=" + attackPower +
-                ", mana=" + mana +
-                '}';
+        return 10 + (level * 5);
     }
 }

@@ -1,45 +1,43 @@
-
 package com.unpri.charactermanager.model;
 
 import java.util.ArrayList;
 
 public class CharacterManager {
 
-    private ArrayList<Character> characterList = new ArrayList<>();
+    private ArrayList<Character> characterList;
 
-    public void addCharacter(Character character) {
-        if (character == null) {
-            System.out.println("Karakter tidak boleh null.");
-            return;
-        }
+    public CharacterManager() {
+        this.characterList = new ArrayList<>();
+    }
 
+    public boolean addCharacter(Character character) {
         if (findByName(character.getName()) != null) {
-            System.out.println("Karakter sudah ada.");
-            return;
+            System.out.println("❌ Gagal: karakter dengan nama '" + character.getName() + "' sudah ada!");
+            return false;
         }
-
         characterList.add(character);
-        System.out.println("Karakter berhasil ditambahkan.");
+        System.out.println("✅ Karakter '" + character.getName() + "' berhasil ditambahkan.");
+        return true;
     }
 
     public Character findByName(String name) {
-        for (Character character : characterList) {
-            if (character.getName().equalsIgnoreCase(name)) {
-                return character;
+        for (Character c : characterList) {
+            if (c.getName().equals(name)) {
+                return c;
             }
         }
         return null;
     }
 
     public boolean removeCharacter(String name) {
-        Character character = findByName(name);
-
-        if (character != null) {
-            characterList.remove(character);
-            return true;
+        Character target = findByName(name);
+        if (target == null) {
+            System.out.println("❌ Gagal hapus: karakter '" + name + "' tidak ditemukan.");
+            return false;
         }
-
-        return false;
+        characterList.remove(target);
+        System.out.println("🗑️ Karakter '" + name + "' berhasil dihapus.");
+        return true;
     }
 
     public int getTotalCharacters() {
@@ -52,27 +50,22 @@ public class CharacterManager {
 
     public double getAverageLevel() {
         if (characterList.isEmpty()) {
-            return 0;
+            return 0.0;
         }
-
-        int total = 0;
-
-        for (Character character : characterList) {
-            total += character.getLevel();
+        int totalLevel = 0;
+        for (Character c : characterList) {
+            totalLevel += c.getLevel();
         }
-
-        return (double) total / characterList.size();
+        return (double) totalLevel / characterList.size();
     }
 
     public ArrayList<Character> findByType(CharacterType type) {
         ArrayList<Character> result = new ArrayList<>();
-
-        for (Character character : characterList) {
-            if (character.getType() == type) {
-                result.add(character);
+        for (Character c : characterList) {
+            if (c.getType() == type) {
+                result.add(c);
             }
         }
-
         return result;
     }
 }
