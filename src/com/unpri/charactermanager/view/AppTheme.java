@@ -15,6 +15,10 @@ public final class AppTheme {
     public static final Color TEXT_MAIN  = Color.decode("#dfe6e9");
     public static final Color TEXT_LIGHT = Color.WHITE;
     public static final Color GOLD       = Color.decode("#fdcb6e");
+    
+    // Konstanta baru untuk Sprint #5
+    public static final Color BG_STATUS  = Color.decode("#0d0d1a"); // latar bar status: lebih gelap
+    public static final Color TEXT_MUTED = Color.decode("#9d9dbf"); // teks sekunder / metadata
 
     // ---------- Font ----------
     public static final Font FONT_TITLE = new Font("SansSerif", Font.BOLD, 22);
@@ -28,10 +32,10 @@ public final class AppTheme {
 
     public static Color colorFor(CharacterType type) {
         switch (type) {
-            case WARRIOR: return Color.decode("#d63031"); // merah
-            case MAGE:    return Color.decode("#0984e3"); // biru
-            case ARCHER:  return Color.decode("#00b894"); // hijau
-            case HEALER:  return Color.decode("#6c5ce7"); // ungu
+            case WARRIOR: return Color.decode("#a648e6"); // merah
+            case MAGE:    return Color.decode("#b4326f"); // biru
+            case ARCHER:  return Color.decode("#c3c484"); // hijau
+            case HEALER:  return Color.decode("#d8d8db"); // ungu
             default:      return Color.GRAY;
         }
     }
