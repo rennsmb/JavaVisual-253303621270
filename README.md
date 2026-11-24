@@ -259,3 +259,26 @@ Output perintah di atas kosong, artinya tidak ada perubahan di Character.java, C
 
 ## Analisis Bagian D TP12 (Google Docs)
 https://drive.google.com/file/d/1opbcdrxmuxVT-N2Gv8sZAClrZf9WNlP7/view?usp=drive_link
+
+
+# TP14 — Character Manager Sprint #6
+Pada sprint ini MainWindow naik dari v0.5 ke v0.6 dengan penambahan panel form "Tambah Karakter" (`CharacterFormPanel`) di wilayah WEST. Pengguna dapat memasukkan nama, memilih role lewat `JComboBox`, dan mengatur level lewat `JSpinner` disertai validasi dua lapis (View dan Model), pesan umpan balik visual, serta pembaruan daftar kartu karakter secara langsung.
+
+## Screenshot
+
+(image-8.png)
+## Tabel uji (Bagian B)
+| No | Skenario / Input Uji | Hasil yang diharapkan | Hasil nyata | Catatan & tindakan perbaikan |
+| :--- | :--- | :--- | :--- | :--- |
+| 1 | Nama kosong (`""` atau hanya spasi), Role `WARRIOR`, Level `1` | Muncul pesan `"Nama wajib diisi"`, border `nameField` berubah merah, dan data tidak disimpan | Sesuai harapan | Tidak ada perubahan; fokus langsung diarahkan kembali ke `nameField` |
+| 2 | Nama kurang dari 3 karakter (`"Al"`) atau lebih dari 20 karakter | Muncul pesan `"Nama harus 3-20 karakter"` dan input ditolak | Sesuai harapan | Panjang dicek setelah `.trim()` pada `validateName()` |
+| 3 | Nama mengandung angka atau simbol (`"Arjuna1"` / `"Bima@"`) | Muncul pesan `"Nama hanya huruf dan spasi"` | Sesuai harapan | Validasi regex `[A-Za-z ]+` berjalan sesuai aturan |
+| 4 | Nama duplikat berbeda huruf besar/kecil (`"arjuna"` saat `"Arjuna"` sudah ada) | Muncul pesan `"Nama sudah dipakai"` karena pengecekan bersifat *case-insensitive* | Sempat gagal kompilasi karena `isNameTaken` belum ada di `CharacterManager` dan `AppTheme.ERROR`/`SUCCESS` belum terdefinisi | Menambahkan `isNameTaken(String)` dengan `equalsIgnoreCase` di `CharacterManager` serta konstanta warna `ERROR` dan `SUCCESS` di `AppTheme`, setelah itu berjalan sesuai harapan |
+| 5 | Level diisi di luar batas (`0` atau `100`) atau teks non-angka pada `JSpinner` | Input non-angka ditolak oleh `commitEdit()` (`ParseException`), sedangkan nilai di luar rentang ditolak Model (`IllegalArgumentException`) | Sesuai harapan | Pesan error dari `ex.getMessage()` langsung ditampilkan pada `messageLabel` |
+| 6 | Input valid: Nama `"Bima"`, Role `WARRIOR`, Level `8` | Muncul pesan `"Tersimpan: Bima"`, form direset ke awal, jumlah karakter bertambah menjadi 8, dan kartu `Bima` tampil di daftar | Sesuai harapan | Daftar kartu dan total karakter di header serta bar status langsung ter-refresh lewat `onAdded.run()` |
+
+## Kompromi sementara (ActionListener minimal & pemanggilan manager langsung)
+Pada sprint ini, tombol **Simpan** dan aksi tekan Enter di `nameField` ditangani menggunakan `ActionListener` minimal (`e -> onSave()`) langsung di dalam `CharacterFormPanel` agar alur input dan validasi dapat diuji tanpa membuat class terpisah. Setelah validasi di View lolos, `CharacterFormPanel` juga memanggil `manager.addCharacter(...)` secara langsung dan memicu penyegaran tampilan melalui callback `onAdded.run()`, sehingga View masih memegang referensi langsung ke `CharacterManager`. Kompromi ini dipilih supaya fitur form, validasi dua lapis, dan pembaruan UI di v0.6 dapat bekerja cepat pada lingkup TP14. Pada pertemuan berikutnya (Pertemuan 9), tanggung jawab ini dirancang untuk dipisahkan ke lapisan Controller agar View hanya meneruskan aksi pengguna dan tidak memodifikasi Model secara langsung.
+
+## Analisis Bagian D TP12 (Google Docs)
+[TP14](https://docs.google.com/document/d/1HWI3337VprMgirrWta0_twFVFQPSeiR6KLDP8boiOAs/edit?usp=drive_link)

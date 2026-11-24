@@ -1,35 +1,93 @@
 package com.unpri.charactermanager.model;
 
+/**
+ * Merepresentasikan satu karakter dalam aplikasi Character Manager.
+ * Menerapkan prinsip Encapsulation: semua atribut private,
+ * akses hanya melalui getter/setter.
+ */
 public class Character {
+
+    // ===== ATRIBUT (private — tidak bisa diakses langsung dari luar class) =====
+    private int id;
     private String name;
     private CharacterType type;
     private int level;
+    private int hitPoints;
+    private int attackPower;
 
+    // ===== CONSTRUCTOR 1: untuk membuat karakter BARU =====
+    // Dipakai saat user membuat karakter dari form (belum punya id dari database)
     public Character(String name, CharacterType type, int level) {
+        this.name = name;              // "this" merujuk ke atribut milik object ini
+        this.type = type;
+        this.level = level;
+        this.hitPoints = calculateBaseHP();      // HP dihitung otomatis dari level
+        this.attackPower = calculateBaseAttack(); // Attack dihitung otomatis dari level
+    }
+
+    // ===== CONSTRUCTOR 2: untuk MEMUAT karakter dari database =====
+    // Dipakai saat data sudah ada (id dan statistik sudah final dari DB)
+    public Character(int id, String name, CharacterType type, int level, int hitPoints, int attackPower) {
+        this.id = id;
         this.name = name;
         this.type = type;
         this.level = level;
+        this.hitPoints = hitPoints;
+        this.attackPower = attackPower;
     }
 
-    public String getName() {
-        return name;
+    // ===== HELPER PRIVATE: hanya dipakai internal class ini =====
+    private int calculateBaseHP() {
+        return 100 + (level * 10);   // contoh: level 5 → HP = 150
     }
 
-    public CharacterType getType() {
-        return type;
+    private int calculateBaseAttack() {
+        return 10 + (level * 5);     // contoh: level 5 → Attack = 35
+    }
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public CharacterType getType() { return type; }
+    public int getLevel() { return level; }
+    public int getHitPoints() { return hitPoints; }
+    public int getAttackPower() { return attackPower; }
+
+    // ===== SETTER: cara AMAN mengubah atribut, dengan VALIDASI =====
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getLevel() {
-        return level;
-    }
+    public void setLevel(int level) {
+        if (level < 1) {                       // validasi: level tidak boleh kurang dari 1
+            throw new IllegalArgumentException("Level minimal adalah 1");
+        }
+        this.level = level;
+        this.hitPoints = calculateBaseHP();      // statistik dihitung ULANG setiap level berubah
+        this.attackPower = calculateBaseAttack();
 
-    // Perhitungan HP dinamis agar nilainya bervariasi tiap karakter (misal: Arjuna 150, Merlin 130, dll)
-    public int getHitPoints() {
-        return 100 + (level * 10);
-    }
-
-    // Perhitungan Attack Power dinamis
-    public int getAttackPower() {
-        return 10 + (level * 5);
-    }
+if (type == CharacterType.MAGE && level > 60) {
+    throw new IllegalArgumentException(
+        "Karakter MAGE tidak boleh memiliki level di atas 60"
+    );
 }
+
+    }
+
+    // ===== toString(): representasi teks object, berguna untuk debugging =====
+    @Override
+    public String toString() {
+        return "Character{id=" + id +
+               ", name='" + name + '\'' +
+               ", type=" + type +
+               ", level=" + level +
+               ", hp=" + hitPoints +
+               ", atk=" + attackPower + '}';
+    }
+@Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;                    // optimasi: jika memang object yang sama persis
+        if (!(obj instanceof Character)) return false;    // jika bukan Character, pasti tidak sama
+        Character other = (Character) obj;                // casting aman karena sudah dicek instanceof
+        return this.name.equals(other.name);               // bandingkan isi atribut name (String punya equals sendiri)
+    }
+       
+}   // kurung kurawal penutup CLASS Character — pastikan jumlah buka/tutup seimbang!
